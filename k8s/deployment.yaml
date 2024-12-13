@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: snake-game
+spec:
+ replicas: 3
+ selector:
+   matchLabels:
+     app: snake-game
+ template:
+   metadata:
+     labels:
+       app: snake-game
+   spec:
+     containers:
+     - name: snake-game
+       image: asia-northeast1-docker.pkg.dev/kes-cicd/snake-game-repo/snake-game:latest
+       ports:
+       - containerPort: 5000
+       resources:
+         requests:
+           memory: "32Mi"
+           cpu: "50m"
+         limits:
+           memory: "64Mi"
+           cpu: "100m"
+       readinessProbe:
+         httpGet:
+           path: /
+           port: 5000
+         initialDelaySeconds: 5
+         periodSeconds: 10
+       livenessProbe:
+         httpGet:
+           path: /
+           port: 5000
+         initialDelaySeconds: 15
+         periodSeconds: 20

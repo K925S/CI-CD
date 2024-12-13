@@ -1,0 +1,21 @@
+steps:
+ - name: 'gcr.io/cloud-builders/docker'
+   args:
+     - 'build'
+     - '-t'
+     - 'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/snake-game-repo/snake-game:latest'
+     - '.'
+ 
+ - name: 'gcr.io/cloud-builders/docker'
+   args:
+     - 'push'
+     - 'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/snake-game-repo/snake-game:latest'
+ 
+ - name: 'gcr.io/cloud-builders/gke-deploy'
+   args:
+   - run
+   - --filename=k8s/
+   - --location=asia-northeast1-a
+   - --cluster=snake-game-cluster
+images:
+ - 'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/snake-game-repo/snake-game:latest'
